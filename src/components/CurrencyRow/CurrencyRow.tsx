@@ -10,11 +10,11 @@ interface IRowProps {
 
 export const CurrencyRow: React.FC<IRowProps> = ({ currencyOptions, selectedCurrency, onChange, amount, onAmountChange }) => {
   const handleOnCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(event.target.value)
+    onChange(event.target.value);
   }
 
   const handleOnAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onAmountChange(Number(event.target.value))
+    onAmountChange(event.target.valueAsNumber);
   }
 
   return (
