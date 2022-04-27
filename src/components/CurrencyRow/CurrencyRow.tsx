@@ -14,7 +14,7 @@ export const CurrencyRow: React.FC<IRowProps> = ({ currencyOptions, selectedCurr
   }
 
   const handleOnAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onAmountChange(event.target.valueAsNumber);
+    onAmountChange(Number(event.target.value))
   }
 
   return (

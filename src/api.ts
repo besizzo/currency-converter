@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+const BASE_URL = 'https://api.exchangerate.host/';
 interface ICurrencyData {
   success: boolean,
   timestamp: number,
@@ -24,23 +25,18 @@ interface IConvertionData {
   result: number,
 };
 
-// const BASE_URL = 'http://api.exchangeratesapi.io/v1/latest?';
-const BASE_URL = 'https://api.exchangerate.host/';
-const key = process.env.REACT_APP_API_KEY
-
-export const fetchCurrencyData = async (): Promise<{ base: string; currencies: string[], rates: any; }> => {
+export const fetchCurrencyData = async (): Promise<{ base: string; currencies: string[] }> => {
   const currencyData = await axios.get<ICurrencyData>(`${BASE_URL}latest?`);
-  const { base, rates, } = currencyData.data
-  // const rates = currencyData.data
-
+  const { base, rates } = currencyData.data
   const currencies = Object.keys(rates);
-  // console.log(base, currencies, rates);
-  return { base, currencies, rates }
+
+  return { base, currencies }
 };
 
 
-export const convertCurrencies = async (from: string, to: string, amount: number): Promise<number> => {
+export const fetchConversionRate = async (from: string, to: string, amount: number): Promise<{ info: { rate: number } }> => {
   const convertionData = await axios.get<IConvertionData>(`${BASE_URL}convert?from=${from}&to=${to}&amount=${amount}`);
-  const { result } = convertionData.data;
-  return result
+  const { info } = convertionData.data;
+
+  return { info }
 }

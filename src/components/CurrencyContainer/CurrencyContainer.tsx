@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import styles from './CurrencyContainer.module.css';
 import { CurrencyRow } from '../CurrencyRow';
 
@@ -25,26 +24,9 @@ export const CurrencyContainer: React.FC<IContainerProps> = ({
   toAmount,
   onToAmountChange,
 }) => {
-
-
-
-
-  // function handleFromAmountChange(event: React.ChangeEvent<HTMLInputElement>) {
-  //   if (isNaN(event.target.valueAsNumber)) return
-  //   setAmount(event.target.valueAsNumber)
-  //   setAmountInFromCurrency(true)
-  // }
-
-  // function handleToAmountChange(event: React.ChangeEvent<HTMLInputElement>) {
-  //   if (isNaN(event.target.valueAsNumber)) return
-  //   setAmount(event.target.valueAsNumber)
-  //   setAmountInFromCurrency(false)
-  // }
-
   return (
     <div className={styles.container}>
       <CurrencyRow
-        // onAmountChange={handleFromAmountChange}
         currencyOptions={currencyOptions}
         selectedCurrency={fromCurrency}
         onChange={event => setFromCurrency(event)}
@@ -53,7 +35,6 @@ export const CurrencyContainer: React.FC<IContainerProps> = ({
       />
       <div className={styles.equals}> = </div>
       <CurrencyRow
-        // onAmountChange={handleToAmountChange}
         currencyOptions={currencyOptions}
         selectedCurrency={toCurrency}
         onChange={event => setToCurrency(event)}
@@ -62,5 +43,4 @@ export const CurrencyContainer: React.FC<IContainerProps> = ({
       />
     </div>
   );
-
 }
