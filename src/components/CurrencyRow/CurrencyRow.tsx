@@ -1,12 +1,11 @@
 import styles from './CurrencyRow.module.css';
 
 interface IRowProps {
-  // onAmountChange: any,
   currencyOptions: string[],
   selectedCurrency: string,
   onChange: React.Dispatch<React.SetStateAction<string | undefined>>,
   amount: number,
-  onAmountChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  onAmountChange: (amount: number) => void,
 }
 
 export const CurrencyRow: React.FC<IRowProps> = ({ currencyOptions, selectedCurrency, onChange, amount, onAmountChange }) => {
@@ -18,7 +17,6 @@ export const CurrencyRow: React.FC<IRowProps> = ({ currencyOptions, selectedCurr
     onAmountChange(event.target.valueAsNumber);
   }
 
-  console.log(currencyOptions)
   return (
     <div className={styles.row}>
       <input type="number" className={styles.input} value={amount} onChange={handleOnAmountChange} />

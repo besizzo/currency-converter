@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import axios from 'axios';
 import { Header } from './components/Header';
 import { CurrencyContainer } from './components/CurrencyContainer';
-import { fetchCurrencyData } from './fetchCurrencyData';
+import { fetchCurrencyData, convertCurrencies } from './api';
 
-const BASE_URL = 'http://api.exchangeratesapi.io/v1/latest?';
-const key = process.env.REACT_APP_API_KEY
+const NATIONAL_CURRENCY = "UAH";
+const BASE_CURRENCY = 'EUR';
 
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState<string[]>([]);
@@ -16,7 +15,7 @@ function App() {
   const [amount, setAmount] = useState(1);
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
 
-  let fromAmount: number, toAmount: number;
+  let fromAmount: number, toAmount: number, currencyRates: any;
   if (amountInFromCurrency) {
     fromAmount = amount
     toAmount = amount * exchangeRate
@@ -26,43 +25,50 @@ function App() {
   }
 
   useEffect(() => {
-    const getRates = async () => {
-      const { base, currency, rates } = await fetchCurrencyData();
-      console.log(base)
+    const getCurrencies = async () => {
+      const { base, currencies, rates } = await fetchCurrencyData();
       setFromCurrency(base);
-      setCurrencyOptions([...currency]);
-      setToCurrency("UAH");
+      setCurrencyOptions([...currencies]);
+      setToCurrency(NATIONAL_CURRENCY);
+      // setExchangeRate(rates[NATIONAL_CURRENCY]);
     }
-    getRates();
-    console.log(fromCurrency, toCurrency)
-
-
-
-
-    // fetch(`${BASE_URL}${key}`)
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     const firstCurrency = Object.keys(data.rates)[0];
-    //     setCurrencyOptions([data.base, ...Object.keys(data.rates)]);
-    //     setFromCurrency(data.base);
-    //     setToCurrency(firstCurrency);
-    //     setExchangeRate(data.rates[firstCurrency]);
-    //   });
+    getCurrencies();
   }, []);
 
-  function handleFromAmountChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setAmount(event.target.valueAsNumber);
+  useEffect(() => {
+    if (!fromCurrency || !toCurrency) return
+    // const getRates = async () => {
+    //   const { rates } = await fetchCurrencyData();
+    //   console.log(exchangeRates)
+
+    // }
+    const getConversion = async () => {
+      const convertedAmount = await convertCurrencies(fromCurrency, toCurrency, amount);
+      setAmount(convertedAmount);
+    }
+    getConversion();
+
+
+
+    //const updatedRate = exchangeRate / currencyRates[toCurrency];
+
+    // getRates();
+    // setExchangeRate(exchangeRate / currencyRates[toCurrency])
+  }, [fromCurrency, toCurrency])
+
+  function handleFromAmountChange(amount: number) {
+    setAmount(amount);
     setAmountInFromCurrency(true);
   }
 
-  function handleToAmountChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setAmount(event.target.valueAsNumber);
+  function handleToAmountChange(amount: number) {
+    setAmount(amount);
     setAmountInFromCurrency(false);
   }
 
-  // useEffect(()=>{
-  //   console.log(fromCurrency, toCurrency)
-  // }, [fromCurrency, toCurrency])
+
+
+
   // useEffect(() => {
   //   if (fromCurrency != null && toCurrency != null) {
   //     fetch(`${BASE_URL}?base=${fromCurrency}&symbols=${toCurrency}`)

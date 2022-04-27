@@ -9,9 +9,9 @@ interface IContainerProps {
   setFromCurrency: React.Dispatch<React.SetStateAction<string | undefined>>
   setToCurrency: React.Dispatch<React.SetStateAction<string | undefined>>
   fromAmount: number,
-  onFromAmountChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  onFromAmountChange: (amount: number) => void,
   toAmount: number,
-  onToAmountChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  onToAmountChange: (amount: number) => void,
 }
 
 export const CurrencyContainer: React.FC<IContainerProps> = ({
