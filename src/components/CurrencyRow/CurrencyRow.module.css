@@ -1,0 +1,19 @@
+.row {
+}
+
+.input {
+  height: 3rem;
+  width: 200px;
+  font-size: 1.5rem;
+  padding: 0 0.5rem;
+  border: 2px solid #babdc2;
+  border-radius: 0.4rem;
+}
+
+.select {
+  margin-left: 20px;
+  font-size: 1.5rem;
+  height: 3rem;
+  border: 2px solid #babdc2;
+  border-radius: 0.4rem;
+}
