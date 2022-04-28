@@ -13,23 +13,23 @@ function App() {
   const [fromCurrency, setFromCurrency] = useState<string>();
   const [toCurrency, setToCurrency] = useState<string>();
   const [exchangeRate, setExchangeRate] = useState(1);
-  const [headerRates, setHeaderRates] = useState({ FAV_CURRENCY_ONE: 1, FAV_CURRENCY_TWO: 1 });
-  const [amount, setAmount] = useState({ from: 1, to: 1 });
+  const [headerRates, setHeaderRates] = useState({ FAV_CURRENCY_ONE: 0, FAV_CURRENCY_TWO: 0 });
+  const [amount, setAmount] = useState({ from: 0, to: 0 });
 
   useEffect(() => {
+
     const getCurrencies = async () => {
       const { base, currencies, rates } = await fetchCurrencyData();
       setFromCurrency(base);
-      setCurrencyOptions([...currencies]);
       setToCurrency(NATIONAL_CURRENCY);
+      setCurrencyOptions([...currencies]);
       setHeaderRates({ FAV_CURRENCY_ONE: rates[NATIONAL_CURRENCY], FAV_CURRENCY_TWO: rates[FAV_CURRENCY_TWO] });
     };
     getCurrencies();
-
   }, []);
 
   useEffect(() => {
-    setAmount({ from: amount.from, to: Number((amount.from * exchangeRate).toFixed(2)) });
+    setAmount({ from: 1, to: Number((amount.from * exchangeRate).toFixed(2)) });
   }, [exchangeRate]);
 
   useEffect(() => {
