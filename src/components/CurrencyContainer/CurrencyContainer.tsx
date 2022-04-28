@@ -11,7 +11,7 @@ interface IContainerProps {
   onFromAmountChange: (amount: number) => void,
   toAmount: number,
   onToAmountChange: (amount: number) => void,
-}
+};
 
 export const CurrencyContainer: React.FC<IContainerProps> = ({
   currencyOptions,

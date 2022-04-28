@@ -6,16 +6,16 @@ interface IRowProps {
   onChange: React.Dispatch<React.SetStateAction<string | undefined>>,
   amount: number,
   onAmountChange: (amount: number) => void,
-}
+};
 
 export const CurrencyRow: React.FC<IRowProps> = ({ currencyOptions, selectedCurrency, onChange, amount, onAmountChange }) => {
   const handleOnCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value);
-  }
+  };
 
   const handleOnAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onAmountChange(event.target.valueAsNumber);
-  }
+  };
 
   return (
     <div className={styles.row}>
@@ -26,5 +26,5 @@ export const CurrencyRow: React.FC<IRowProps> = ({ currencyOptions, selectedCurr
         ))}
       </select>
     </div>
-  )
+  );
 }

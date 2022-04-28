@@ -1,7 +1,5 @@
 import styles from './Header.module.css';
-
-const FAV_CURRENCY_ONE = 'EUR';
-const FAV_CURRENCY_TWO = 'USD';
+import { FAV_CURRENCY_ONE, FAV_CURRENCY_TWO } from '../../App';
 
 interface IHeaderProps {
   exchangeRates: {
@@ -15,7 +13,7 @@ export const Header: React.FC<IHeaderProps> = ({ exchangeRates, nationalCurrency
   const rates = {
     FAV_CURRENCY_ONE: exchangeRates.FAV_CURRENCY_ONE.toFixed(2),
     FAV_CURRENCY_TWO: (exchangeRates.FAV_CURRENCY_ONE / exchangeRates.FAV_CURRENCY_TWO).toFixed(2),
-  }
+  };
 
   return (
     <div className={styles.header}>
@@ -29,5 +27,5 @@ export const Header: React.FC<IHeaderProps> = ({ exchangeRates, nationalCurrency
         <div className={styles.row}>1 / {rates.FAV_CURRENCY_TWO}</div>
       </div>
     </div>
-  )
-}
+  );
+};

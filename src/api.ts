@@ -27,10 +27,10 @@ interface IConvertionData {
 
 export const fetchCurrencyData = async (): Promise<{ base: string; currencies: string[], rates: any, }> => {
   const currencyData = await axios.get<ICurrencyData>(`${BASE_URL}latest?`);
-  const { base, rates } = currencyData.data
+  const { base, rates } = currencyData.data;
   const currencies = Object.keys(rates);
 
-  return { base, currencies, rates }
+  return { base, currencies, rates };
 };
 
 
@@ -38,5 +38,5 @@ export const fetchConversionRate = async (from: string, to: string, amount: numb
   const convertionData = await axios.get<IConvertionData>(`${BASE_URL}convert?from=${from}&to=${to}&amount=${amount}`);
   const { info } = convertionData.data;
 
-  return { info }
+  return { info };
 }
