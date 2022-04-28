@@ -25,12 +25,12 @@ interface IConvertionData {
   result: number,
 };
 
-export const fetchCurrencyData = async (): Promise<{ base: string; currencies: string[] }> => {
+export const fetchCurrencyData = async (): Promise<{ base: string; currencies: string[], rates: any, }> => {
   const currencyData = await axios.get<ICurrencyData>(`${BASE_URL}latest?`);
   const { base, rates } = currencyData.data
   const currencies = Object.keys(rates);
 
-  return { base, currencies }
+  return { base, currencies, rates }
 };
 
 
