@@ -5,8 +5,8 @@ interface IContainerProps {
   currencyOptions: string[],
   fromCurrency: string,
   toCurrency: string,
-  setFromCurrency: React.Dispatch<React.SetStateAction<string | undefined>>
-  setToCurrency: React.Dispatch<React.SetStateAction<string | undefined>>
+  onFromCurrencyChange: (event: React.ChangeEvent<HTMLSelectElement>) => void,
+  onToCurrencyChange: (event: React.ChangeEvent<HTMLSelectElement>) => void,
   fromAmount: number,
   onFromAmountChange: (amount: number) => void,
   toAmount: number,
@@ -17,8 +17,8 @@ export const CurrencyContainer: React.FC<IContainerProps> = ({
   currencyOptions,
   fromCurrency,
   toCurrency,
-  setFromCurrency,
-  setToCurrency,
+  onFromCurrencyChange,
+  onToCurrencyChange,
   fromAmount,
   onFromAmountChange,
   toAmount,
@@ -29,7 +29,7 @@ export const CurrencyContainer: React.FC<IContainerProps> = ({
       <CurrencyRow
         currencyOptions={currencyOptions}
         selectedCurrency={fromCurrency}
-        onChange={event => setFromCurrency(event)}
+        onCurrencyChange={onFromCurrencyChange}
         amount={fromAmount}
         onAmountChange={onFromAmountChange}
       />
@@ -37,7 +37,7 @@ export const CurrencyContainer: React.FC<IContainerProps> = ({
       <CurrencyRow
         currencyOptions={currencyOptions}
         selectedCurrency={toCurrency}
-        onChange={event => setToCurrency(event)}
+        onCurrencyChange={onToCurrencyChange}
         amount={toAmount}
         onAmountChange={onToAmountChange}
       />

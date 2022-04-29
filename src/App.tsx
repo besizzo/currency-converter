@@ -1,33 +1,34 @@
-import { useState, useEffect, useCallback } from 'react';
-import './App.css';
+import { useEffect, useReducer } from 'react';
+import styles from './App.module.css';
+import { reducer, initialState, CurrencyActionsType } from './reducer';
 import { Header } from './components/Header';
-import { CurrencyContainer } from './components/CurrencyContainer';
-import { useEffectOnFirstChange } from './useEffectOnFirstChange';
+import { CurrencyRow } from './components/CurrencyRow';
 import { fetchCurrencyData, fetchConversionRate } from './api';
-
-const NATIONAL_CURRENCY = "UAH";
-export const FAV_CURRENCY_ONE = 'EUR';
-export const FAV_CURRENCY_TWO = 'USD';
+import { NATIONAL_CURRENCY, FAV_CURRENCY_TWO } from './constants';
 
 function App() {
-  const [currencyOptions, setCurrencyOptions] = useState<string[]>([]);
-  const [fromCurrency, setFromCurrency] = useState<string>();
-  const [toCurrency, setToCurrency] = useState<string>();
-  const [exchangeRate, setExchangeRate] = useState(0);
-  const [headerRates, setHeaderRates] = useState({ FAV_CURRENCY_ONE: 0, FAV_CURRENCY_TWO: 0 });
-  const [amount, setAmount] = useState({ from: 0, to: 0 });
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const getCurrencies = async () => {
       try {
         const { base, currencies, rates } = await fetchCurrencyData();
-
-        setFromCurrency(base);
-        setToCurrency(NATIONAL_CURRENCY);
-        setCurrencyOptions([...currencies]);
-        setHeaderRates({ FAV_CURRENCY_ONE: rates[NATIONAL_CURRENCY], FAV_CURRENCY_TWO: rates[FAV_CURRENCY_TWO] });
-      } catch (e) {
-        console.log(e);
+        const { info } = await fetchConversionRate(base, NATIONAL_CURRENCY);
+        dispatch({
+          type: CurrencyActionsType.INIT,
+          payload: {
+            fromCurrency: base,
+            toCurrency: NATIONAL_CURRENCY,
+            currencyOptions: [currencies],
+            headerRates: {
+              FAV_CURRENCY_ONE: rates[NATIONAL_CURRENCY],
+              FAV_CURRENCY_TWO: rates[FAV_CURRENCY_TWO],
+            },
+            exchangeRate: info.rate,
+          }
+        })
+      } catch (error) {
+        console.log(error);
       }
     };
 
@@ -35,42 +36,70 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!fromCurrency || !toCurrency) return;
-
+    if (!state.fromCurrency || !state.toCurrency) return;
+    console.log('runned')
     const getConversion = async () => {
-      const { info } = await fetchConversionRate(fromCurrency, toCurrency);
-      setExchangeRate(info.rate);
+      const { info } = await fetchConversionRate(state.fromCurrency, state.toCurrency);
+      dispatch({
+        type: CurrencyActionsType.UPDATE_EXC_RATE,
+        payload: info.rate,
+      })
     };
     getConversion();
-  }, [fromCurrency, toCurrency]);
 
-  const handleFromAmountChange = useCallback((amount: number) => {
-    setAmount({ from: amount, to: Number((amount * exchangeRate).toFixed(2)) });
-  }, [exchangeRate]);
+  }, [state.fromCurrency, state.toCurrency]);
 
-  function handleToAmountChange(amount: number) {
-    setAmount({ from: Number((amount / exchangeRate).toFixed(2)), to: amount });
+  const handleFromAmountChange = (updatedAmount: number) => {
+    dispatch({
+      type: CurrencyActionsType.CHANGE_FROM_AMOUNT,
+      payload: updatedAmount,
+    })
   };
 
-  useEffectOnFirstChange(() => {
-    handleFromAmountChange(1);
-  }, [exchangeRate]);
+  const handleToAmountChange = (updatedAmount: number) => {
+    dispatch({
+      type: CurrencyActionsType.CHANGE_TO_AMOUNT,
+      payload: updatedAmount
+    })
+  };
 
+
+  const handleFromCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch({
+      type: CurrencyActionsType.CHANGE_FROM_CURRENCY,
+      payload: event.target.value,
+    })
+  }
+
+  const handleToCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch({
+      type: CurrencyActionsType.CHANGE_TO_CURRENCY,
+      payload: event.target.value,
+    })
+  }
 
   return (
     <div className="App">
-      <Header exchangeRates={headerRates} nationalCurrency={NATIONAL_CURRENCY} />
-      {fromCurrency && toCurrency && <CurrencyContainer
-        currencyOptions={currencyOptions}
-        fromCurrency={fromCurrency}
-        toCurrency={toCurrency}
-        setFromCurrency={setFromCurrency}
-        setToCurrency={setToCurrency}
-        fromAmount={amount.from}
-        onFromAmountChange={handleFromAmountChange}
-        toAmount={amount.to}
-        onToAmountChange={handleToAmountChange}
-      />}
+      <Header exchangeRates={state.headerRates} />
+      {state.fromCurrency && state.toCurrency &&
+        <div className={styles.container}>
+          <CurrencyRow
+            currencyOptions={state.currencyOptions}
+            selectedCurrency={state.fromCurrency}
+            onCurrencyChange={handleFromCurrencyChange}
+            amount={state.amount.from}
+            onAmountChange={handleFromAmountChange}
+          />
+          <div className={styles.equals}> = </div>
+          <CurrencyRow
+            currencyOptions={state.currencyOptions}
+            selectedCurrency={state.toCurrency}
+            onCurrencyChange={handleToCurrencyChange}
+            amount={state.amount.to}
+            onAmountChange={handleToAmountChange}
+          />
+        </div>
+      }
     </div>
   );
 }

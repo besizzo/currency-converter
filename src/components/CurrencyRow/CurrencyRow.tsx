@@ -3,14 +3,20 @@ import styles from './CurrencyRow.module.css';
 interface IRowProps {
   currencyOptions: string[],
   selectedCurrency: string,
-  onChange: React.Dispatch<React.SetStateAction<string | undefined>>,
+  onCurrencyChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
   amount: number,
   onAmountChange: (amount: number) => void,
 };
 
-export const CurrencyRow: React.FC<IRowProps> = ({ currencyOptions, selectedCurrency, onChange, amount, onAmountChange }) => {
+export const CurrencyRow: React.FC<IRowProps> = ({
+  currencyOptions,
+  selectedCurrency,
+  onCurrencyChange,
+  amount,
+  onAmountChange
+}) => {
   const handleOnCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(event.target.value);
+    onCurrencyChange(event);
   };
 
   const handleOnAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,8 +25,15 @@ export const CurrencyRow: React.FC<IRowProps> = ({ currencyOptions, selectedCurr
 
   return (
     <div className={styles.row}>
-      <input type="number" className={styles.input} value={amount} onChange={handleOnAmountChange} />
-      <select className={styles.select} value={selectedCurrency} onChange={handleOnCurrencyChange}>
+      <input
+        type="number"
+        className={styles.input}
+        value={Number(amount.toFixed(2))}
+        onChange={handleOnAmountChange} />
+      <select
+        className={styles.select}
+        value={selectedCurrency}
+        onChange={handleOnCurrencyChange}>
         {currencyOptions.map(option => (
           <option key={option} value={option}>{option}</option>
         ))}
