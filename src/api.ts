@@ -34,8 +34,8 @@ export const fetchCurrencyData = async (): Promise<{ base: string; currencies: s
 };
 
 
-export const fetchConversionRate = async (from: string, to: string, amount: number): Promise<{ info: { rate: number } }> => {
-  const convertionData = await axios.get<IConvertionData>(`${BASE_URL}convert?from=${from}&to=${to}&amount=${amount}`);
+export const fetchConversionRate = async (from: string, to: string): Promise<{ info: { rate: number } }> => {
+  const convertionData = await axios.get<IConvertionData>(`${BASE_URL}convert?from=${from}&to=${to}`);
   const { info } = convertionData.data;
 
   return { info };
